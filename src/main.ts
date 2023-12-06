@@ -130,15 +130,16 @@ let coordinates: leaflet.LatLng[] = [];
 coordinates.push(playerMarker.getLatLng());
 const polyline = leaflet.polyline(coordinates, { color: "red" }).addTo(map);
 
-loadLocal();
 map.setView(playerMarker.getLatLng());
 
+loadLocal();
 regenerateCells();
 
 function makeGeocache(i: number, j: number) {
   const geocacheCell = board.getCellForPoint(
     leaflet.latLng({ lat: i, lng: j })
   );
+
   const newGeocacheCell = new Geocache(geocacheCell);
   if (geocachePopup.has(geocacheCell)) {
     newGeocacheCell.fromMomento(geocachePopup.get(geocacheCell)!);
@@ -222,6 +223,7 @@ function makeGeocache(i: number, j: number) {
 //     }
 //   }
 // }
+
 function regenerateCells() {
   for (let i = -NEIGHBORHOOD_SIZE; i < NEIGHBORHOOD_SIZE; i++) {
     for (let j = -NEIGHBORHOOD_SIZE; j < NEIGHBORHOOD_SIZE; j++) {
@@ -279,7 +281,7 @@ resetButton.addEventListener("click", () => {
   const resetPrompt = prompt("Reset game state? (Yes / No)")!;
   if (resetPrompt.toLowerCase() == "yes") {
     geocoinList.length = 0;
-    `Geocoins: ${geocoinList.length}`;
+    statusPanel.innerHTML = `Geocoins: ${geocoinList.length}`;
     for (const geocache of geocacheList) {
       geocache.remove();
     }
@@ -310,7 +312,7 @@ function saveLocal(): void {
   const saveData: Data = {
     geocoinListData: geocoinList, // copy geocoinList to avoid reference issues
     geocachePopupData: Array.from(geocachePopup.entries()), // convert Map to array of entries
-    playerLocationData: playerMarker.getLatLng(),// copy LatLng object
+    playerLocationData: playerMarker.getLatLng(), // copy LatLng object
     coordinateData: coordinates, // copy coordinates array
   };
 
@@ -341,6 +343,7 @@ function loadLocal(): void {
       coordinateData: [],
     };
   }
+  statusPanel.innerHTML = `Geocoins: ${geocoinList.length}`;
 }
 
 // function to continuously save game data and log a message
